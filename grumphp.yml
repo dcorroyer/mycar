@@ -1,0 +1,61 @@
+grumphp:
+  process_timeout: 180
+  tasks:
+    git_blacklist:
+      keywords:
+        - 'dd('
+        - 'die('
+        - 'var_dump('
+        - 'exit;'
+      match_word: true
+      triggered_by: [ php ]
+    git_commit_message:
+      enforce_capitalized_subject: false
+      max_subject_width: 72
+      max_body_width: 72
+      type_scope_conventions:
+        types:
+          - build
+          - ci
+          - chore
+          - docs
+          - feat
+          - fix
+          - perf
+          - refactor
+          - revert
+          - style
+          - test
+        scopes: [ ]
+    phpcs:
+      standard: PSR12
+      severity: 5
+      error_severity: 5
+      warning_severity: 5
+      ignore_patterns:
+        - '*/public/index.php'
+        - '*/tests/*'
+      triggered_by: [ 'php' ]
+    phpstan:
+      autoload_file: ~
+      configuration: ~
+      level: null
+      force_patterns: [ ]
+      ignore_patterns: [ ]
+      triggered_by: [ 'php' ]
+      memory_limit: '-1'
+      use_grumphp_paths: true
+    phpinsights:
+    phpunit:
+      always_execute: true
+    securitychecker_enlightn:
+      lockfile: ./composer.lock
+      run_always: false
+
+services:
+  Tests\CodeQuality\GrumPHP\PhpInsightsTask:
+    arguments:
+      - '@process_builder'
+      - '@formatter.raw_process'
+    tags:
+      - { name: grumphp.task, task: phpinsights }

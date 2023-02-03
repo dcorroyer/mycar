@@ -1,0 +1,18 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    paths:
+        - 'app/'
+        - 'config/'
+        - 'database/'
+        - 'routes/'
+        - 'tests/'
+    excludePaths:
+        - 'config/insights.php'
+        - 'tests'
+    ignoreErrors:
+        - '#Access to an undefined property [A-Za-z0-9\]+::$[A-Za-z0-9_]+.#'
+        - '#Call to an undefined static method [a-zA-Z0-9\\_]+::descendantsOf\(\)#'
+        - '#Call to an undefined static method [a-zA-Z0-9\\_]+::descendantsAndSelf\(\)#'
+    level: 5
