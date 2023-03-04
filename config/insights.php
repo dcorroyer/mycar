@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use NunoMaduro\PhpInsights\Domain\Insights\CyclomaticComplexityIsHigh;
 use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenDefineFunctions;
 use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenFinalClasses;
 use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenNormalClasses;
@@ -11,6 +12,8 @@ use NunoMaduro\PhpInsights\Domain\Metrics\Architecture\Classes;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
 use SlevomatCodingStandard\Sniffs\Commenting\UselessFunctionDocCommentSniff;
+use SlevomatCodingStandard\Sniffs\Functions\FunctionLengthSniff;
+use SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\AlphabeticallySortedUsesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
@@ -95,9 +98,30 @@ return [
             'title' => 'The usage of private methods is not idiomatic in Laravel.',
         ],
         LineLengthSniff::class => [
-            'lineLimit' => 100,
-            'absoluteLineLimit' => 100,
+            'lineLimit' => 120,
+            'absoluteLineLimit' => 120,
             'ignoreComments' => true,
+            'exclude' => [
+                'app/Models/Tenant/User.php',
+            ],
+        ],
+        UnusedParameterSniff::class => [
+            'exclude' => [
+                'Http/Resources',
+            ],
+        ],
+        FunctionLengthSniff::class => [
+            'maxLinesLength' => 30,
+            'exclude' => [
+                'Actions',
+                'Http/Resources',
+            ],
+        ],
+        CyclomaticComplexityIsHigh::class => [
+            'maxComplexity' => 6,
+            'exclude' => [
+                'app/Traits/Actions/WithQueryBuilder.php',
+            ],
         ],
     ],
 

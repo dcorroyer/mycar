@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Vehicule;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class VehiculeSeeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -13,6 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(VehiculeSeeder::class);
+        Vehicule::factory(10)->create();
     }
 }

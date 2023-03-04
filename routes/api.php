@@ -1,6 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Actions\Vehicule\CreateVehicule;
+use App\Actions\Vehicule\DeleteVehicule;
+use App\Actions\Vehicule\GetVehicules;
+use App\Actions\Vehicule\UpdateVehicule;
+use App\Http\Middleware\ForceAcceptHeader;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +19,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+$middlewares = [
+    //ForceAcceptHeader::class,
+    SubstituteBindings::class,
+];
+
+Route::prefix('/')->middleware($middlewares)->group(function () {
+    /**
+     * VEHICULES
+     */
+    Route::prefix('vehicules')->group(function () {
+        Route::get('/', GetVehicules::class)
+            ->name('vehicule.index');
+        Route::post('/', CreateVehicule::class)
+            ->name('vehicule.store');
+
+        Route::prefix('{vehicule:id}')->group(function () {
+            Route::get('/', GetVehicules::class)
+                ->name('vehicule.show');
+            Route::patch('/', UpdateVehicule::class)
+                ->name('vehicule.update');
+            Route::delete('/', DeleteVehicule::class)
+                ->name('vehicule.destroy');
+        });
+    });
 });
