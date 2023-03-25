@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Actions\Vehicule;
 
+use App\Models\User;
 use App\Models\Vehicule;
 use Tests\TestCase;
 
@@ -16,14 +17,19 @@ class GetVehiculesTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->vehicules = Vehicule::factory(10)->create();
+        $this->user = User::factory()->create();
+        $this->vehicules = Vehicule::factory(10)
+            ->owner($this->user)
+            ->create();
+
         $this->route = route('vehicule.index');
     }
 
     /** @test */
-    public function it_can_get_vehicules_by_route_feature()
+    public function it_can_get_vehicules_feature()
     {
-        $this->getJson($this->route)
+        $this->actingAs($this->user)
+            ->getJson($this->route)
             ->assertOk()
             ->assertJsonCount(10)
         ;
@@ -32,7 +38,8 @@ class GetVehiculesTest extends TestCase
     /** @test */
     public function it_can_get_vehicules_with_filter_feature()
     {
-        $this->getJson($this->route . '?filter[identification]=' . $this->vehicules->first()->identification)
+        $this->actingAs($this->user)
+            ->getJson($this->route . '?filter[identification]=' . $this->vehicules->first()->identification)
             ->assertOk()
         ;
     }

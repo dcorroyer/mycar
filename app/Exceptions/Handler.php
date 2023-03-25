@@ -2,7 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Authentication\InvalidAuthentication;
+use App\Exceptions\User\InvalidUser;
+use App\Exceptions\Vehicule\InvalidVehicule;
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -38,5 +44,30 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+        $this->renderable(function (Exception $exception, Request $request) {
+            if ($request->acceptsJson()) {
+                if (in_array($exception::class, $this->getUnprocessableExceptions())) {
+                    return response()->json(
+                        ['message' => $exception->getMessage()],
+                        Response::HTTP_UNPROCESSABLE_ENTITY
+                    );
+                }
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Get classes who will return as "Unprocessable Entity" on JSON Request.
+     *
+     * @return array
+     */
+    private function getUnprocessableExceptions(): array
+    {
+        return [
+            InvalidAuthentication::class,
+            InvalidUser::class,
+            InvalidVehicule::class,
+        ];
     }
 }

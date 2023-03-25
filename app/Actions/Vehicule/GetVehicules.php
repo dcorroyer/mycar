@@ -6,6 +6,7 @@ use App\Contracts\Actions\QueryBuilderAction;
 use App\Http\Resources\VehiculeResource;
 use App\Models\Vehicule;
 use App\Traits\Actions\WithQueryBuilder;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -18,9 +19,9 @@ class GetVehicules extends Action implements QueryBuilderAction
 
     /**
      * @param array $query
-     * @param \App\Models\Vehicule|null $vehicule
+     * @param Vehicule|null $vehicule
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function handle(array $query, ?Vehicule $vehicule): Collection
     {
@@ -28,6 +29,13 @@ class GetVehicules extends Action implements QueryBuilderAction
             ->when(
                 $vehicule->id,
                 fn ($q) => $q->where('id', $vehicule->id)
+            )
+            ->when(
+                auth()->user(),
+                fn ($q) => $q->whereHas(
+                    'user',
+                    fn ($q) => $q->where('users.id', auth()->user()->id)
+                )
             )
             ->get();
     }
@@ -64,7 +72,9 @@ class GetVehicules extends Action implements QueryBuilderAction
      */
     public function getIncludes(): array
     {
-        return [];
+        return [
+            'user',
+        ];
     }
 
     /**
@@ -81,10 +91,18 @@ class GetVehicules extends Action implements QueryBuilderAction
     }
 
     /**
-     * @param \App\Models\Vehicule $vehicule
+     * @return Authenticatable
+     */
+    public function authorize(): Authenticatable
+    {
+        return auth()->user();
+    }
+
+    /**
+     * @param Vehicule $vehicule
      * @param ActionRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function asController(Vehicule $vehicule, ActionRequest $request): JsonResponse
     {

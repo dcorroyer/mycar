@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\Models\HasUuid;
+use App\Traits\Models\HasUlid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vehicule extends Model
 {
     use HasFactory;
-    use HasUuid;
+    use HasUlid;
     use SoftDeletes;
 
     /**
@@ -24,5 +25,16 @@ class Vehicule extends Model
         'brand',
         'model',
         'modelyear',
+        'user_id',
     ];
+
+    /**
+     * Get the user (owner) of the vehicule
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

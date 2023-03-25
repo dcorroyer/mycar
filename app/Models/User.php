@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\Models\HasUlid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -13,6 +15,26 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+    use HasUlid;
+    use SoftDeletes;
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'name',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +42,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'firstname',
+        'lastname',
         'name',
         'email',
         'password',
@@ -36,11 +60,41 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Interact with the user's first name.
      *
-     * @var array<string, string>
+     * @return Attribute
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected function firstname(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value,
+            set: fn ($value) => ucfirst(strtolower($value)),
+        );
+    }
+
+    /**
+     * Interact with the user's last name.
+     *
+     * @return Attribute
+     */
+    protected function lastname(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value,
+            set: fn ($value) => ucfirst(strtolower($value)),
+        );
+    }
+
+    /**
+     * Interact with the user's name.
+     *
+     * @return Attribute
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getAttribute('firstname') . ' ' .
+                $this->getAttribute('lastname'),
+        );
+    }
 }

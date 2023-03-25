@@ -14,14 +14,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('vehicules', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
+            $table->ulid()->unique();
             $table->timestamps();
             $table->softDeletes();
             $table->string('type');
-            $table->string('identification');
+            $table->string('identification')->unique();
             $table->string('brand');
             $table->string('model');
             $table->integer('modelyear');
+            $table->foreignId('user_id')->constrained();
         });
     }
 

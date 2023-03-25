@@ -4,6 +4,7 @@ namespace Tests\Unit\Actions\Vehicule;
 
 use App\Actions\Vehicule\DeleteVehicule;
 use App\Events\Vehicule\VehiculeDeleted;
+use App\Models\User;
 use App\Models\Vehicule;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -20,7 +21,11 @@ class DeleteVehiculeTest extends TestCase
     {
         parent::setUp();
         Event::fake(VehiculeDeleted::class);
-        $this->vehicule = Vehicule::factory()->create();
+
+        $this->user = User::factory()->create();
+        $this->vehicule = Vehicule::factory()
+            ->owner($this->user)
+            ->create();
     }
 
     /** @test */

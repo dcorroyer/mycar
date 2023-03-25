@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Actions\Vehicule;
 
+use App\Models\User;
 use App\Models\Vehicule;
 use Tests\TestCase;
 
@@ -16,14 +17,19 @@ class DeleteVehiculeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->vehicule = Vehicule::factory()->create();
+        $this->user = User::factory()->create();
+        $this->vehicule = Vehicule::factory()
+            ->owner($this->user)
+            ->create();
+
         $this->route = route('vehicule.destroy', ['vehicule' => $this->vehicule]);
     }
 
     /** @test */
-    public function it_can_delete_a_vehicule_by_route_feature()
+    public function it_can_delete_a_vehicule_feature()
     {
-        $this->deleteJson($this->route)
+        $this->actingAs($this->user)
+            ->deleteJson($this->route)
             ->assertNoContent();
 
         $this->assertSoftDeleted('vehicules', [

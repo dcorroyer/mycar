@@ -4,6 +4,7 @@ namespace Tests\Unit\Actions\Vehicule;
 
 use App\Actions\Vehicule\CreateVehicule;
 use App\Events\Vehicule\VehiculeCreated;
+use App\Models\User;
 use App\Models\Vehicule;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -20,7 +21,12 @@ class CreateVehiculeTest extends TestCase
     {
         parent::setUp();
         Event::fake(VehiculeCreated::class);
-        $this->vehicule = Vehicule::factory()->make()->toArray();
+
+        $this->user = User::factory()->create();
+        $this->vehicule = Vehicule::factory()
+            ->owner($this->user)
+            ->make()
+            ->toArray();
     }
 
     /** @test */
