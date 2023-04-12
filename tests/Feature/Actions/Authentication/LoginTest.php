@@ -36,4 +36,13 @@ class LoginTest extends TestCase
         $this->postJson($this->route, $this->user)
             ->assertOk();
     }
+
+    /** @test */
+    public function it_cant_login_invalid_credentials_feature()
+    {
+        $this->user['password'] = 'john123';
+
+        $this->postJson($this->route, $this->user)
+            ->assertUnprocessable();
+    }
 }

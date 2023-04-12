@@ -6,6 +6,7 @@ use App\Enums\Vehicule\VehiculeTypes;
 use App\Events\Vehicule\VehiculeCreated;
 use App\Exceptions\Vehicule\InvalidVehicule;
 use App\Http\Resources\VehiculeResource;
+use App\Models\User;
 use App\Models\Vehicule;
 use App\Traits\Actions\WithValidation;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,14 @@ class CreateVehicule extends Action
         $this->fill($data);
         $attributes = $this->validated();
 
+        $userId = User::where('uuid', $attributes['user_uuid'])->first()->id;
+        $attributes['user_id'] = $userId;
+
+        //dd($attributes);
+
         $vehicule = Vehicule::create($attributes);
+
+        dd($vehicule);
 
         VehiculeCreated::dispatch($vehicule);
 
@@ -51,7 +59,7 @@ class CreateVehicule extends Action
      */
     public function authorize(ActionRequest $request): bool
     {
-        return auth()->user()->id === $request->user_id;
+        return auth()->user()->id === User::firstWhere('uuid', $request->get('user_uuid'));
     }
 
     /**
@@ -65,7 +73,7 @@ class CreateVehicule extends Action
             'brand' => ['required', 'string', 'max:255'],
             'model' => ['required', 'string', 'max:255'],
             'modelyear' => ['required', 'numeric'],
-            'user_id' => ['required', 'exists:users,id'],
+            'user_uuid' => ['required', 'exists:users,uuid'],
         ];
     }
 

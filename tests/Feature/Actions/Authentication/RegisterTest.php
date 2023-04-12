@@ -37,4 +37,13 @@ class RegisterTest extends TestCase
             ])
         ;
     }
+
+    /** @test */
+    public function it_cant_register_bad_request_feature()
+    {
+        $this->user['email'] = 'john';
+
+        $this->postJson($this->route, $this->user)
+            ->assertUnprocessable();
+    }
 }

@@ -37,4 +37,33 @@ class CreateVehiculeTest extends TestCase
             ])
         ;
     }
+
+    /** @test */
+    public function it_cant_create_a_vehicule_already_created_feature()
+    {
+        $vehicule = Vehicule::factory()
+            ->owner($this->user)
+            ->create();
+
+        $this->actingAs($this->user)
+            ->postJson($this->route, $vehicule->toArray())
+            ->assertUnprocessable()
+        ;
+    }
+
+    /** @test */
+    public function it_cant_create_a_vehicule_bad_request_feature()
+    {
+        $vehicule = Vehicule::factory()
+            ->owner($this->user)
+            ->make()
+            ->toArray();
+
+        $vehicule['type'] = 'butterfly';
+
+        $this->actingAs($this->user)
+            ->postJson($this->route, $vehicule)
+            ->assertUnprocessable()
+        ;
+    }
 }

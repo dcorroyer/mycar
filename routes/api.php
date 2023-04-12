@@ -6,7 +6,7 @@ use App\Actions\Vehicule\CreateVehicule;
 use App\Actions\Vehicule\DeleteVehicule;
 use App\Actions\Vehicule\GetVehicules;
 use App\Actions\Vehicule\UpdateVehicule;
-use App\Http\Middleware\ForceAcceptHeader;
+//use App\Http\Middleware\ForceAcceptHeader;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 $middlewares = [
-    ForceAcceptHeader::class,
+    //ForceAcceptHeader::class,
     SubstituteBindings::class,
 ];
 
