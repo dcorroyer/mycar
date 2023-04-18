@@ -24,7 +24,6 @@ class CreateVehiculeTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->vehicule = Vehicule::factory()
-            ->owner($this->user)
             ->make()
             ->toArray();
     }
@@ -32,7 +31,7 @@ class CreateVehiculeTest extends TestCase
     /** @test */
     public function it_can_create_a_vehicule_unit()
     {
-        $vehicule = CreateVehicule::run($this->vehicule);
+        $vehicule = CreateVehicule::run($this->vehicule, $this->user);
 
         $this->assertDatabaseHas('vehicules', [
             'id' => $vehicule->id,

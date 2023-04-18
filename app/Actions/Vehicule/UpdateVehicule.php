@@ -78,7 +78,10 @@ class UpdateVehicule extends Action
      */
     public function asController(Vehicule $vehicule, ActionRequest $request): JsonResponse
     {
-        $vehicule = $this->handle($vehicule, $request->all());
+        $vehicule = $this->handle(
+            $vehicule,
+            $request->all()
+        );
 
         return response()->json(new VehiculeResource($vehicule));
     }

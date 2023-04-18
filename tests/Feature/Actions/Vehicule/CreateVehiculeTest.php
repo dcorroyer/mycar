@@ -19,8 +19,9 @@ class CreateVehiculeTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
         $this->vehicule = Vehicule::factory()
-            ->owner($this->user)
-            ->make()
+            ->make([
+                'user_uuid' => $this->user->uuid,
+            ])
             ->toArray();
 
         $this->route = route('vehicule.store');

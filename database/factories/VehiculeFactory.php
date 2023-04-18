@@ -28,7 +28,6 @@ class VehiculeFactory extends Factory
             'brand' => $vehicle['brand'],
             'model' => $vehicle['model'],
             'modelyear' => $this->faker->biasedNumberBetween(1990, date('Y')),
-            'user_id' => User::factory()->create(),
         ];
     }
 
