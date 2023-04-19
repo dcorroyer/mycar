@@ -4,6 +4,7 @@ namespace App\Actions\Vehicule;
 
 use App\Events\Vehicule\VehiculeDeleted;
 use App\Exceptions\Vehicule\InvalidVehicule;
+use App\Helpers\UserHelper;
 use App\Models\Vehicule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -22,12 +23,6 @@ class DeleteVehicule extends Action
      */
     public function handle(Vehicule $vehicule): Vehicule
     {
-        throw_if(
-            !Vehicule::where('uuid', $vehicule->uuid)->exists(),
-            InvalidVehicule::class,
-            'Vehicule not found',
-        );
-
         $vehicule->delete();
 
         VehiculeDeleted::dispatch($vehicule);
@@ -39,10 +34,22 @@ class DeleteVehicule extends Action
      * @param ActionRequest $request
      *
      * @return bool
+     *
+     * @throws Throwable
      */
     public function authorize(ActionRequest $request): bool
     {
-        return auth()->user()->id === $request->vehicule->user_id;
+        throw_if(
+            !Vehicule::where('uuid', $request->vehicule->uuid)->exists(),
+            InvalidVehicule::class,
+            'Vehicule not found',
+        );
+
+        return auth()->user()
+            && app(UserHelper::class)->isVehiculeFromUser(
+                auth()->user(),
+                Vehicule::firstWhere('uuid', $request->vehicule->uuid)
+            );
     }
 
     /**

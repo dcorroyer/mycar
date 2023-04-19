@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Events\Vehicule;
+namespace App\Events\Maintenance;
 
-use App\Models\Vehicule;
+use App\Models\Maintenance;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class VehiculeCreated
+class MaintenanceDeleted
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
     /**
-     * @var Vehicule $vehicule
+     * @var Maintenance $maintenance
      */
-    protected Vehicule $vehicule;
+    protected Maintenance $maintenance;
 
     /**
      * Create a new event instance.
      *
-     * @param Vehicule $vehicule
+     * @param Maintenance $maintenance
      */
-    public function __construct(Vehicule $vehicule)
+    public function __construct(Maintenance $maintenance)
     {
-        $this->vehicule = $vehicule;
+        $this->maintenance = $maintenance;
     }
 }

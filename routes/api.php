@@ -2,6 +2,10 @@
 
 use App\Actions\Authentication\Login;
 use App\Actions\Authentication\Register;
+use App\Actions\Maintenance\CreateMaintenance;
+use App\Actions\Maintenance\DeleteMaintenance;
+use App\Actions\Maintenance\GetMaintenances;
+use App\Actions\Maintenance\UpdateMaintenance;
 use App\Actions\User\GetCurrentUser;
 use App\Actions\Vehicule\CreateVehicule;
 use App\Actions\Vehicule\DeleteVehicule;
@@ -64,6 +68,25 @@ Route::prefix('/')->middleware($middlewares)->group(function () {
                     ->name('vehicule.update');
                 Route::delete('/', DeleteVehicule::class)
                     ->name('vehicule.destroy');
+
+                /**
+                 * MAINTENANCES
+                 */
+                Route::prefix('maintenances')->group(function () {
+                    Route::get('/', GetMaintenances::class)
+                        ->name('maintenance.index');
+                    Route::post('/', CreateMaintenance::class)
+                        ->name('maintenance.store');
+
+                    Route::prefix('{maintenance:uuid}')->group(function () {
+                        Route::get('/', GetMaintenances::class)
+                            ->name('maintenance.show');
+                        Route::patch('/', UpdateMaintenance::class)
+                            ->name('maintenance.update');
+                        Route::delete('/', DeleteMaintenance::class)
+                            ->name('maintenance.destroy');
+                    });
+                });
             });
         });
     });

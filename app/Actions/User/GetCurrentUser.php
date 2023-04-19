@@ -30,5 +30,4 @@ class GetCurrentUser extends RouteAction
         return response()
             ->json(new UserResource($this->handle()));
     }
-
 }

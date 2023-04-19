@@ -14,14 +14,14 @@ class VehiculeDeleted
     use SerializesModels;
 
     /**
-     * @var \App\Models\Vehicule $vehicule
+     * @var Vehicule $vehicule
      */
     protected Vehicule $vehicule;
 
     /**
      * Create a new event instance.
      *
-     * @param \App\Models\Vehicule $vehicule
+     * @param Vehicule $vehicule
      */
     public function __construct(Vehicule $vehicule)
     {

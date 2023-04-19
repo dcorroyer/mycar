@@ -2,19 +2,20 @@
 
 namespace App\Actions\Vehicule;
 
+use App\Actions\RouteAction;
 use App\Enums\Vehicule\VehiculeTypes;
 use App\Events\Vehicule\VehiculeUpdated;
 use App\Exceptions\Vehicule\InvalidVehicule;
+use App\Helpers\UserHelper;
 use App\Http\Resources\VehiculeResource;
 use App\Models\Vehicule;
 use App\Traits\Actions\WithValidation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rules\Enum;
-use Lorisleiva\Actions\Action;
 use Lorisleiva\Actions\ActionRequest;
 use Throwable;
 
-class UpdateVehicule extends Action
+class UpdateVehicule extends RouteAction
 {
     use WithValidation;
 
@@ -28,12 +29,6 @@ class UpdateVehicule extends Action
      */
     public function handle(Vehicule $vehicule, array $data): Vehicule
     {
-        throw_if(
-            !Vehicule::where('uuid', $vehicule->uuid)->exists(),
-            InvalidVehicule::class,
-            'Vehicule not found',
-        );
-
         $this->fill($data);
         $attributes = $this->validated();
 
@@ -48,10 +43,22 @@ class UpdateVehicule extends Action
      * @param ActionRequest $request
      *
      * @return bool
+     *
+     * @throws Throwable
      */
     public function authorize(ActionRequest $request): bool
     {
-        return auth()->user()->id === $request->vehicule->user_id;
+        throw_if(
+            !Vehicule::where('uuid', $request->vehicule->uuid)->exists(),
+            InvalidVehicule::class,
+            'Vehicule not found',
+        );
+
+        return auth()->user()
+            && app(UserHelper::class)->isVehiculeFromUser(
+                auth()->user(),
+                Vehicule::firstWhere('id', $request->vehicule->id)
+            );
     }
 
     /**
