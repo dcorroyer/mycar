@@ -20,11 +20,8 @@ class GetCurrentUserTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->expectException(UnauthorizedException::class);
-        app(GetCurrentUser::class)->handle();
-
         $this->actingAs($user);
-        $response = app(GetCurrentUser::class)->handle($user);
+        $response = GetCurrentUser::run($user);
         $this->assertEquals($user->id, $response->id);
     }
 }

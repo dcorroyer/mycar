@@ -7,6 +7,8 @@ use App\Actions\Maintenance\DeleteMaintenance;
 use App\Actions\Maintenance\GetMaintenances;
 use App\Actions\Maintenance\UpdateMaintenance;
 use App\Actions\User\GetCurrentUser;
+use App\Actions\User\UpdatePassword;
+use App\Actions\User\UpdateProfile;
 use App\Actions\Vehicule\CreateVehicule;
 use App\Actions\Vehicule\DeleteVehicule;
 use App\Actions\Vehicule\GetVehicules;
@@ -47,9 +49,13 @@ Route::prefix('/')->middleware($middlewares)->group(function () {
         /**
          * USERS
          */
-        Route::prefix('users')->group(function () {
-            Route::get('/me', GetCurrentUser::class)
+        Route::prefix('users/me')->group(function () {
+            Route::get('/', GetCurrentUser::class)
                 ->name('user.me');
+            Route::patch('/', UpdateProfile::class)
+                ->name('user.update');
+            Route::post('/update-password', UpdatePassword::class)
+                ->name('user.update-password');
         });
 
         /**

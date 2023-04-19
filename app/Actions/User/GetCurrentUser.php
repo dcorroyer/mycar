@@ -5,8 +5,8 @@ namespace App\Actions\User;
 use App\Actions\RouteAction;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\UnauthorizedException;
 
 class GetCurrentUser extends RouteAction
 {
@@ -15,11 +15,15 @@ class GetCurrentUser extends RouteAction
      */
     public function handle(): User
     {
-        if (!auth()->user()) {
-            throw new UnauthorizedException();
-        }
-
         return User::where('id', auth()->user()->id)->first();
+    }
+
+    /**
+     * @return Authenticatable
+     */
+    public function authorize(): Authenticatable
+    {
+        return auth()->user();
     }
 
     /**
@@ -27,7 +31,6 @@ class GetCurrentUser extends RouteAction
      */
     public function asController(): JsonResponse
     {
-        return response()
-            ->json(new UserResource($this->handle()));
+        return response()->json(new UserResource($this->handle()));
     }
 }
