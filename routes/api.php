@@ -2,6 +2,7 @@
 
 use App\Actions\Authentication\Login;
 use App\Actions\Authentication\Register;
+use App\Actions\User\GetCurrentUser;
 use App\Actions\Vehicule\CreateVehicule;
 use App\Actions\Vehicule\DeleteVehicule;
 use App\Actions\Vehicule\GetVehicules;
@@ -39,6 +40,14 @@ Route::prefix('/')->middleware($middlewares)->group(function () {
      * AUTH USER ONLY
      */
     Route::middleware('auth:sanctum')->group(function () {
+        /**
+         * USERS
+         */
+        Route::prefix('users')->group(function () {
+            Route::get('/me', GetCurrentUser::class)
+                ->name('user.me');
+        });
+
         /**
          * VEHICULES
          */
