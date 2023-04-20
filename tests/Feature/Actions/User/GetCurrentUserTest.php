@@ -32,7 +32,7 @@ class GetCurrentUserTest extends TestCase
     }
 
     /** @test */
-    public function it_cannot_get_current_user_if_not_logged_feature()
+    public function it_cant_get_current_user_if_not_logged_feature()
     {
         User::factory()->create();
 

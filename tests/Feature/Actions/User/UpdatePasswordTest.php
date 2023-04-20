@@ -36,7 +36,7 @@ class UpdatePasswordTest extends TestCase
     }
 
     /** @test */
-    public function it_cannot_update_password_confirmed_dont_match_feature()
+    public function it_cant_update_password_confirmed_dont_match_feature()
     {
         $data = [
             'current_password' => 'password',
@@ -50,7 +50,7 @@ class UpdatePasswordTest extends TestCase
     }
 
     /** @test */
-    public function it_cannot_update_password_current_password_invalid_feature()
+    public function it_cant_update_password_current_password_invalid_feature()
     {
         $data = [
             'current_password' => 'passworddddd',

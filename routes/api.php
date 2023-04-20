@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Authentication\ForgotPassword;
 use App\Actions\Authentication\Login;
 use App\Actions\Authentication\Register;
 use App\Actions\Maintenance\CreateMaintenance;
@@ -7,6 +8,7 @@ use App\Actions\Maintenance\DeleteMaintenance;
 use App\Actions\Maintenance\GetMaintenances;
 use App\Actions\Maintenance\UpdateMaintenance;
 use App\Actions\User\GetCurrentUser;
+use App\Actions\User\ResetPassword;
 use App\Actions\User\UpdatePassword;
 use App\Actions\User\UpdateProfile;
 use App\Actions\Vehicule\CreateVehicule;
@@ -37,10 +39,22 @@ Route::prefix('/')->middleware($middlewares)->group(function () {
     /**
      * AUTHENTICATION
      */
-    Route::post('/auth/register', Register::class)
-        ->name('register');
-    Route::post('/auth/login', Login::class)
-        ->name('login');
+    Route::prefix('auth')->group(function () {
+        Route::post('/register', Register::class)
+            ->name('register');
+        Route::post('/login', Login::class)
+            ->name('login');
+    });
+
+    /**
+     * USERS
+     */
+    Route::prefix('users')->group(function () {
+        Route::post('/forgot-password', ForgotPassword::class)
+            ->name('password.forgot');
+        Route::post('/reset-password', ResetPassword::class)
+            ->name('password.reset');
+    });
 
     /**
      * AUTH USER ONLY
