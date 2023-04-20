@@ -39,8 +39,7 @@ class CreateMaintenanceTest extends TestCase
             ->assertCreated()
             ->assertJson([
                 'amount' => $this->maintenance['amount'],
-            ])
-        ;
+            ]);
     }
 
     /** @test */
@@ -55,7 +54,6 @@ class CreateMaintenanceTest extends TestCase
 
         $this->actingAs($this->user)
             ->postJson($this->route, $maintenance)
-            ->assertUnprocessable()
-        ;
+            ->assertUnprocessable();
     }
 }

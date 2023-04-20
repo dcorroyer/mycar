@@ -3,9 +3,7 @@
 namespace Tests\Unit\Actions\Maintenance;
 
 use App\Actions\Maintenance\DeleteMaintenance;
-use App\Actions\Maintenance\UpdateMaintenance;
 use App\Events\Maintenance\MaintenanceDeleted;
-use App\Events\Maintenance\MaintenanceUpdated;
 use App\Models\Maintenance;
 use App\Models\User;
 use App\Models\Vehicule;

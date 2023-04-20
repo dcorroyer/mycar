@@ -2,9 +2,6 @@
 
 namespace Tests\Feature\Actions\Authentication;
 
-use App\Actions\Authentication\Register;
-use App\Events\User\UserCreated;
-use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 /**
@@ -34,8 +31,7 @@ class RegisterTest extends TestCase
             ->assertCreated()
             ->assertJson([
                 'email' => $this->user['email'],
-            ])
-        ;
+            ]);
     }
 
     /** @test */

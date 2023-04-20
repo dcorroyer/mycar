@@ -31,8 +31,7 @@ class GetVehiculesTest extends TestCase
         $this->actingAs($this->user)
             ->getJson($this->route)
             ->assertOk()
-            ->assertJsonCount(10)
-        ;
+            ->assertJsonCount(10);
     }
 
     /** @test */
@@ -40,7 +39,6 @@ class GetVehiculesTest extends TestCase
     {
         $this->actingAs($this->user)
             ->getJson($this->route . '?filter[identification]=' . $this->vehicules->first()->identification)
-            ->assertOk()
-        ;
+            ->assertOk();
     }
 }

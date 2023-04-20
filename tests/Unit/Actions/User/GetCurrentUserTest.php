@@ -4,7 +4,6 @@ namespace Tests\Unit\Actions\User;
 
 use App\Actions\User\GetCurrentUser;
 use App\Models\User;
-use Illuminate\Validation\UnauthorizedException;
 use Tests\TestCase;
 
 /**

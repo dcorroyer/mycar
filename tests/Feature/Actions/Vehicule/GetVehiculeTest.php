@@ -33,7 +33,6 @@ class GetVehiculeTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'identification' => $this->vehicule->identification,
-            ])
-        ;
+            ]);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Actions\Authentication;
 
-use App\Actions\Authentication\Login;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;

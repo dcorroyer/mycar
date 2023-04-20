@@ -35,8 +35,7 @@ class GetMaintenancesTest extends TestCase
         $this->actingAs($this->user)
             ->getJson($this->route)
             ->assertOk()
-            ->assertJsonCount(10)
-        ;
+            ->assertJsonCount(10);
     }
 
     /** @test */
@@ -44,7 +43,6 @@ class GetMaintenancesTest extends TestCase
     {
         $this->actingAs($this->user)
             ->getJson($this->route . '?filter[type]=' . $this->maintenances->first()->type)
-            ->assertOk()
-        ;
+            ->assertOk();
     }
 }

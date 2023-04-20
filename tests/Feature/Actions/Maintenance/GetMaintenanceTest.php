@@ -42,7 +42,6 @@ class GetMaintenanceTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'type' => $this->maintenance->type,
-            ])
-        ;
+            ]);
     }
 }

@@ -35,8 +35,7 @@ class CreateVehiculeTest extends TestCase
             ->assertCreated()
             ->assertJson([
                 'identification' => $this->vehicule['identification'],
-            ])
-        ;
+            ]);
     }
 
     /** @test */
@@ -48,8 +47,7 @@ class CreateVehiculeTest extends TestCase
 
         $this->actingAs($this->user)
             ->postJson($this->route, $vehicule->toArray())
-            ->assertUnprocessable()
-        ;
+            ->assertUnprocessable();
     }
 
     /** @test */
@@ -64,7 +62,6 @@ class CreateVehiculeTest extends TestCase
 
         $this->actingAs($this->user)
             ->postJson($this->route, $vehicule)
-            ->assertUnprocessable()
-        ;
+            ->assertUnprocessable();
     }
 }

@@ -46,7 +46,6 @@ class UpdateMaintenanceTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'amount' => $data['amount'],
-            ])
-        ;
+            ]);
     }
 }

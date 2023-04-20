@@ -37,7 +37,6 @@ class UpdateVehiculeTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'identification' => $data['identification'],
-            ])
-        ;
+            ]);
     }
 }
