@@ -6,6 +6,7 @@ use App\Traits\Models\HasUlid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Maintenance extends Model
 {
@@ -42,5 +43,15 @@ class Maintenance extends Model
     public function vehicule(): BelongsTo
     {
         return $this->belongsTo(Vehicule::class);
+    }
+
+    /**
+     * Get the invoices for the maintenance
+     *
+     * @return HasMany
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 }

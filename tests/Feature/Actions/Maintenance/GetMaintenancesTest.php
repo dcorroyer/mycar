@@ -39,7 +39,7 @@ class GetMaintenancesTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_vehicules_with_filter_feature()
+    public function it_can_get_maintenances_with_filter_feature()
     {
         $this->actingAs($this->user)
             ->getJson($this->route . '?filter[type]=' . $this->maintenances->first()->type)

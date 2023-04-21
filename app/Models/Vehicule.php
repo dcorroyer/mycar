@@ -40,7 +40,7 @@ class Vehicule extends Model
     }
 
     /**
-     * Get the maintenances of the vehicule
+     * Get the maintenances for the vehicule
      *
      * @return HasMany
      */

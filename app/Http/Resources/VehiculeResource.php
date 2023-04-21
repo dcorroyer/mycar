@@ -22,6 +22,9 @@ class VehiculeResource extends JsonResource
             'model' => $this->model,
             'modelyear' => $this->modelyear,
             'user' => $this->whenLoaded('user', fn () => new UserResource($this->user)),
+            'maintenances' => $this->whenLoaded('maintenances', function () {
+                return MaintenanceResource::collection($this->maintenances);
+            }),
         ];
     }
 }

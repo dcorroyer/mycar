@@ -3,6 +3,9 @@
 use App\Actions\Authentication\ForgotPassword;
 use App\Actions\Authentication\Login;
 use App\Actions\Authentication\Register;
+use App\Actions\Invoice\CreateInvoice;
+use App\Actions\Invoice\DeleteInvoice;
+use App\Actions\Invoice\GetInvoices;
 use App\Actions\Maintenance\CreateMaintenance;
 use App\Actions\Maintenance\DeleteMaintenance;
 use App\Actions\Maintenance\GetMaintenances;
@@ -105,6 +108,23 @@ Route::prefix('/')->middleware($middlewares)->group(function () {
                             ->name('maintenance.update');
                         Route::delete('/', DeleteMaintenance::class)
                             ->name('maintenance.destroy');
+
+                        /**
+                         * INVOICES
+                         */
+                        Route::prefix('invoices')->group(function () {
+                            Route::get('/', GetInvoices::class)
+                                ->name('invoice.index');
+                            Route::post('/', CreateInvoice::class)
+                                ->name('invoice.store');
+
+                            Route::prefix('{invoice:uuid}')->group(function () {
+                                Route::get('/', GetInvoices::class)
+                                    ->name('invoice.show');
+                                Route::delete('/', DeleteInvoice::class)
+                                    ->name('invoice.destroy');
+                            });
+                        });
                     });
                 });
             });

@@ -18,7 +18,7 @@ class MaintenanceSeeder extends Seeder
         $vehicules = Vehicule::all();
 
         foreach ($vehicules as $vehicule) {
-            Maintenance::factory(3)->create([
+            Maintenance::factory(mt_rand(2, 3))->create([
                 'vehicule_id' => $vehicule->id,
             ]);
         }

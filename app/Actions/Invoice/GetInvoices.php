@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Actions\Maintenance;
+namespace App\Actions\Invoice;
 
 use App\Contracts\Actions\QueryBuilderAction;
-use App\Http\Resources\MaintenanceResource;
+use App\Http\Resources\InvoiceResource;
+use App\Models\Invoice;
 use App\Models\Maintenance;
 use App\Models\Vehicule;
 use App\Traits\Actions\WithQueryBuilder;
@@ -14,27 +15,27 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Action;
 use Lorisleiva\Actions\ActionRequest;
 
-class GetMaintenances extends Action implements QueryBuilderAction
+class GetInvoices extends Action implements QueryBuilderAction
 {
     use WithQueryBuilder;
 
     /**
      * @param array $query
-     * @param Vehicule $vehicule
-     * @param Maintenance|null $maintenance
+     * @param Maintenance $maintenance
+     * @param Invoice|null $invoice
      *
      * @return Collection
      */
-    public function handle(array $query, Vehicule $vehicule, ?Maintenance $maintenance): Collection
+    public function handle(array $query, Maintenance $maintenance, ?Invoice $invoice): Collection
     {
-        return $this->getQueryBuilder(Maintenance::class, $query)
+        return $this->getQueryBuilder(Invoice::class, $query)
             ->when(
-                $maintenance->id,
-                fn ($q) => $q->where('id', $maintenance->id)
+                $invoice->id,
+                fn ($q) => $q->where('id', $invoice->id)
             )
             ->when(
-                $vehicule->id,
-                fn ($q) => $q->where('vehicule_id', $vehicule->id)
+                $maintenance->id,
+                fn ($q) => $q->where('maintenance_id', $maintenance->id)
             )
             ->get();
     }
@@ -45,9 +46,12 @@ class GetMaintenances extends Action implements QueryBuilderAction
     public function getFields(): array
     {
         return [
-            'type',
-            'amount',
-            'description',
+            'name',
+            'mime_type',
+            'path',
+            'disk',
+            'size',
+            'position',
         ];
     }
 
@@ -57,8 +61,9 @@ class GetMaintenances extends Action implements QueryBuilderAction
     public function getFilters(): array
     {
         return [
-            'type',
-            'amount',
+            'name',
+            'mime_type',
+            'path',
         ];
     }
 
@@ -68,8 +73,7 @@ class GetMaintenances extends Action implements QueryBuilderAction
     public function getIncludes(): array
     {
         return [
-            'vehicule',
-            'invoices',
+            'maintenance',
         ];
     }
 
@@ -79,8 +83,8 @@ class GetMaintenances extends Action implements QueryBuilderAction
     public function getSorts(): array
     {
         return [
-            'type',
-            'amount',
+            'mime_type',
+            'size',
         ];
     }
 
@@ -96,26 +100,33 @@ class GetMaintenances extends Action implements QueryBuilderAction
      * @param ActionRequest $request
      * @param Vehicule $vehicule
      * @param Maintenance $maintenance
+     * @param Invoice $invoice
      *
      * @return JsonResponse
+     *
+     * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter
      */
-    public function asController(ActionRequest $request, Vehicule $vehicule, Maintenance $maintenance): JsonResponse
-    {
-        $maintenances = $this->handle(
+    public function asController(
+        ActionRequest $request,
+        Vehicule $vehicule,
+        Maintenance $maintenance,
+        Invoice $invoice
+    ): JsonResponse {
+        $invoices = $this->handle(
             $request->all(),
-            $vehicule,
             $maintenance,
+            $invoice,
         );
 
-        if (!$maintenance->id) {
+        if (!$invoice->id) {
             return response()
-                ->json(MaintenanceResource::collection($maintenances));
+                ->json(InvoiceResource::collection($invoices));
         }
 
-        $maintenance = $maintenances->first();
+        $invoice = $invoices->first();
 
-        return $maintenance
-            ? response()->json(new MaintenanceResource($maintenance))
+        return $invoice
+            ? response()->json(new InvoiceResource($invoice))
             : response()->json([], Response::HTTP_NOT_FOUND);
     }
 }

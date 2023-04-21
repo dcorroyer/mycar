@@ -15,7 +15,7 @@ class VehiculeSeeder extends Seeder
      */
     public function run(): void
     {
-        Vehicule::factory(3)->create([
+        Vehicule::factory(mt_rand(2, 3))->create([
             'user_id' => User::where('email', 'admin@mycar.local')->first(),
         ]);
     }
