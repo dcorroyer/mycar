@@ -22,11 +22,14 @@ class InvoiceResource extends JsonResource
             'url' => $this->url,
             'size' => $this->size,
             //'position' => $this->position,
-            'maintenance' => $this
-                ->whenLoaded(
-                    'maintenance',
-                    fn () => new MaintenanceResource($this->maintenance)
-                ),
+            'maintenance' => $this->whenLoaded(
+                'maintenance',
+                fn () => new MaintenanceResource($this->maintenance)
+            ),
+            'vehicule' => $this->whenLoaded(
+                'vehicule',
+                fn () => new VehiculeResource($this->vehicule)
+            ),
         ];
     }
 }

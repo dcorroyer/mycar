@@ -20,6 +20,7 @@ class InvoiceSeeder extends Seeder
         foreach ($maintenances as $maintenance) {
             Invoice::factory(mt_rand(2, 3))->create([
                 'maintenance_id' => $maintenance->id,
+                'vehicule_id' => $maintenance->vehicule_id,
             ]);
         }
     }

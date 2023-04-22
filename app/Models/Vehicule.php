@@ -48,4 +48,14 @@ class Vehicule extends Model
     {
         return $this->hasMany(Maintenance::class);
     }
+
+    /**
+     * Get the invoices for the vehicule
+     *
+     * @return HasMany
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }

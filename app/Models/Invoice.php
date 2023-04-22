@@ -28,6 +28,7 @@ class Invoice extends Model
         'size',
         'position',
         'maintenance_id',
+        'vehicule_id',
     ];
 
     /**
@@ -38,6 +39,16 @@ class Invoice extends Model
     public function maintenance(): BelongsTo
     {
         return $this->belongsTo(Maintenance::class);
+    }
+
+    /**
+     * Get the vehicule of the invoice
+     *
+     * @return BelongsTo
+     */
+    public function vehicule(): BelongsTo
+    {
+        return $this->belongsTo(Vehicule::class);
     }
 
     /**

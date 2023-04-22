@@ -25,6 +25,7 @@ return new class extends Migration
             $table->float('size');
             $table->integer('position')->nullable();
             $table->foreignId('maintenance_id')->constrained();
+            $table->foreignId('vehicule_id')->constrained();
         });
     }
 

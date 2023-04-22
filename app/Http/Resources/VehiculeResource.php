@@ -25,6 +25,9 @@ class VehiculeResource extends JsonResource
             'maintenances' => $this->whenLoaded('maintenances', function () {
                 return MaintenanceResource::collection($this->maintenances);
             }),
+            'invoices' => $this->whenLoaded('invoices', function () {
+                return InvoiceResource::collection($this->invoices);
+            }),
         ];
     }
 }

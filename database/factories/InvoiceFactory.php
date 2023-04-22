@@ -84,6 +84,7 @@ class InvoiceFactory extends Factory
     {
         return $this->state(fn () => [
             'maintenance_id' => $maintenance->id,
+            'vehicule_id' => $maintenance->vehicule_id,
         ]);
     }
 }

@@ -75,6 +75,7 @@ class GetVehicules extends Action implements QueryBuilderAction
         return [
             'user',
             'maintenances',
+            'invoices',
         ];
     }
 

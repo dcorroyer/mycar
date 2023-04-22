@@ -48,6 +48,7 @@ class CreateInvoice extends RouteAction
                 'size' => $file->getSize(),
                 'disk' => $disk,
                 'maintenance_id' => $maintenance->id,
+                'vehicule_id' => $maintenance->vehicule_id,
             ]
         );
 
