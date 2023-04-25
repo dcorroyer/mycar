@@ -4,17 +4,19 @@ namespace App\Actions\Invoice;
 
 use App\Actions\RouteAction;
 use App\Events\Invoice\InvoiceCreated;
+use App\Exceptions\Maintenance\InvalidMaintenance;
+use App\Helpers\UserHelper;
 use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
 use App\Models\Maintenance;
 use App\Traits\Actions\WithValidation;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\ActionRequest;
+use Throwable;
 
 class CreateInvoice extends RouteAction
 {
@@ -60,11 +62,25 @@ class CreateInvoice extends RouteAction
     }
 
     /**
-     * @return Authenticatable
+     * @param ActionRequest $request
+     *
+     * @return bool
+     *
+     * @throws Throwable
      */
-    public function authorize(): Authenticatable
+    public function authorize(ActionRequest $request): bool
     {
-        return auth()->user();
+        throw_if(
+            !Maintenance::where('uuid', $request->get('maintenance_uuid'))->exists(),
+            InvalidMaintenance::class,
+            'Maintenance you sent doesn\'t exists',
+        );
+
+        return auth()->user()
+            && app(UserHelper::class)->isVehiculeFromUser(
+                auth()->user(),
+                Maintenance::firstWhere('uuid', $request->get('maintenance_uuid'))
+            );
     }
 
     /**

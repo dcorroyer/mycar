@@ -4,14 +4,17 @@ namespace App\Actions\Invoice;
 
 use App\Actions\RouteAction;
 use App\Events\Invoice\InvoiceDeleted;
+use App\Exceptions\Invoice\InvalidInvoice;
+use App\Helpers\UserHelper;
 use App\Models\Invoice;
 use App\Models\Maintenance;
 use App\Models\Vehicule;
 use App\Traits\Actions\WithValidation;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Lorisleiva\Actions\ActionRequest;
+use Throwable;
 
 class DeleteInvoice extends RouteAction
 {
@@ -34,11 +37,25 @@ class DeleteInvoice extends RouteAction
     }
 
     /**
-     * @return Authenticatable
+     * @param ActionRequest $request
+     *
+     * @return bool
+     *
+     * @throws Throwable
      */
-    public function authorize(): Authenticatable
+    public function authorize(ActionRequest $request): bool
     {
-        return auth()->user();
+        throw_if(
+            !Invoice::where('uuid', $request->invoice->uuid)->exists(),
+            InvalidInvoice::class,
+            'Invoice you sent doesn\'t exists',
+        );
+
+        return auth()->user()
+            && app(UserHelper::class)->isVehiculeFromUser(
+                auth()->user(),
+                Maintenance::firstWhere('id', $request->invoice->maintenance_id)
+            );
     }
 
     /**
