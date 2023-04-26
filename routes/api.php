@@ -5,6 +5,7 @@ use App\Actions\Authentication\Login;
 use App\Actions\Authentication\Register;
 use App\Actions\Invoice\CreateInvoice;
 use App\Actions\Invoice\DeleteInvoice;
+use App\Actions\Invoice\DownloadInvoice;
 use App\Actions\Invoice\GetInvoices;
 use App\Actions\Maintenance\CreateMaintenance;
 use App\Actions\Maintenance\DeleteMaintenance;
@@ -123,6 +124,8 @@ Route::prefix('/')->middleware($middlewares)->group(function () {
                                     ->name('invoice.show');
                                 Route::delete('/', DeleteInvoice::class)
                                     ->name('invoice.destroy');
+                                Route::get('/download', DownloadInvoice::class)
+                                    ->name('invoice.download');
                             });
                         });
                     });

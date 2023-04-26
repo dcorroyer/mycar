@@ -3,6 +3,7 @@
 namespace App\Actions\Invoice;
 
 use App\Actions\RouteAction;
+use App\Enums\Invoice\InvoiceMimeTypes;
 use App\Events\Invoice\InvoiceCreated;
 use App\Exceptions\Maintenance\InvalidMaintenance;
 use App\Helpers\UserHelper;
@@ -12,6 +13,7 @@ use App\Models\Maintenance;
 use App\Traits\Actions\WithValidation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -38,21 +40,7 @@ class CreateInvoice extends RouteAction
 
         $path = Storage::disk($disk)->put('/', $file);
 
-        $attributes = array_merge(
-            Arr::except($attributes, ['file']),
-            [
-                'name' => !isset($attributes['name'])
-                    ? $file->getClientOriginalName()
-                    : $attributes['name'],
-                'path' => $path,
-                'file_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getMimeType(),
-                'size' => $file->getSize(),
-                'disk' => $disk,
-                'maintenance_id' => $maintenance->id,
-                'vehicule_id' => $maintenance->vehicule_id,
-            ]
-        );
+        $attributes = $this->buildInvoiceAttributes($attributes, $file, $path, $disk, $maintenance);
 
         $invoice = Invoice::create($attributes);
 
@@ -89,10 +77,15 @@ class CreateInvoice extends RouteAction
     public function rules(): array
     {
         $isRoute = $this->isFromRoute();
+        $mimeTypes = implode(',', [
+            InvoiceMimeTypes::Jpeg->value,
+            InvoiceMimeTypes::Png->value,
+            InvoiceMimeTypes::Pdf->value,
+        ]);
 
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'file' => ['required', 'file', 'max:10000'],
+            'file' => ['required', 'file', 'max:10000', "mimetypes:{$mimeTypes}"],
             'maintenance_uuid' => [Rule::requiredIf($isRoute), 'exists:maintenances,uuid'],
         ];
     }
@@ -110,5 +103,36 @@ class CreateInvoice extends RouteAction
         );
 
         return response()->json(new InvoiceResource($invoice), Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param array $attributes
+     * @param UploadedFile $file
+     * @param string $path
+     * @param string $disk
+     * @param Maintenance $maintenance
+     *
+     * @return array
+     */
+    protected function buildInvoiceAttributes(
+        array $attributes,
+        UploadedFile $file,
+        string $path,
+        string $disk,
+        Maintenance $maintenance
+    ): array {
+        return array_merge(
+            Arr::except($attributes, ['file']),
+            [
+                'name' => !isset($attributes['name']) ? $file->getClientOriginalName() : $attributes['name'],
+                'path' => $path,
+                'file_name' => $file->getClientOriginalName(),
+                'mime_type' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'disk' => $disk,
+                'maintenance_id' => $maintenance->id,
+                'vehicule_id' => $maintenance->vehicule_id,
+            ]
+        );
     }
 }
