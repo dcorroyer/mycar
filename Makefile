@@ -29,6 +29,13 @@ test:
 inspect:
 	docker-compose run --rm php vendor/bin/grumphp run
 
+cc:
+	docker-compose run --rm php bin/console c:c
+
+clear:
+	docker-compose run --rm php artisan clear
+	docker-compose run --rm php artisan config:clear
+
 dbcreate:
 	docker-compose run --rm php php artisan migrate:fresh --seed
 
@@ -39,7 +46,4 @@ npm-install:
 	docker-compose run --rm npm install
 
 npm-dev:
-	docker-compose run --rm npm run dev
-
-npm-watch:
-	docker-compose run --rm npm run watch
+	docker-compose run --rm --service-ports npm run dev
