@@ -1,0 +1,16 @@
+#!/bin/bash
+#Setup your app
+
+docker-compose up -d
+
+if [ -f .env ]; then
+    echo ".env exist"
+else
+    echo ".env doesn't exist"
+    cp .env.example .env
+    echo ".env copied from .env.example"
+fi
+
+docker-compose run --rm php composer install
+
+echo "install finished, remember to check the configuration of .env and .env.testing and configure your database"
