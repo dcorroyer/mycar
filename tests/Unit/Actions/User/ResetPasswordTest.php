@@ -2,10 +2,11 @@
 
 namespace Tests\Unit\Actions\User;
 
-use App\Actions\User\UpdatePassword;
-use App\Events\User\PasswordUpdated;
+use App\Actions\User\ResetPassword;
+use App\Events\User\PasswordReset;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
 /**
@@ -14,28 +15,28 @@ use Tests\TestCase;
  * @group user-update
  * @group user-update-unit
  */
-class UpdatePasswordTest extends TestCase
+class ResetPasswordTest extends TestCase
 {
     public function setUp(): void
     {
         parent::setUp();
-        Event::fake(PasswordUpdated::class);
+        Event::fake(PasswordReset::class);
     }
 
     /** @test */
-    public function it_can_update_password_unit()
+    public function it_can_reset_password_unit()
     {
         $user = User::factory()->create();
 
         $data = [
-            'current_password' => 'password',
+            'token' => Password::broker()->createToken($user),
+            'email' => $user->email,
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ];
 
-        $this->actingAs($user);
-        $response = UpdatePassword::run($user, $data);
-        $this->assertEquals($user->id, $response->id);
-        Event::assertDispatched(PasswordUpdated::class);
+        $response = ResetPassword::run($data);
+        $this->assertIsString($response);
+        Event::assertDispatched(PasswordReset::class);
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Unit\Actions\User;
 
 use App\Actions\User\GetCurrentUser;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 /**
