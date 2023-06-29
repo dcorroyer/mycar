@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserCreated
+class EmailVerified
 {
     use Dispatchable;
     use InteractsWithSockets;
@@ -26,25 +26,5 @@ class UserCreated
     public function __construct(User $user)
     {
         $this->user = $user;
-    }
-
-    /**
-     * Get event's user.
-     *
-     * @return User
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    /**
-     * Get event's user.
-     *
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->user->email;
     }
 }

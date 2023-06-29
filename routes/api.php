@@ -15,6 +15,7 @@ use App\Actions\User\GetCurrentUser;
 use App\Actions\User\ResetPassword;
 use App\Actions\User\UpdatePassword;
 use App\Actions\User\UpdateProfile;
+use App\Actions\User\VerifyEmail;
 use App\Actions\Vehicule\CreateVehicule;
 use App\Actions\Vehicule\DeleteVehicule;
 use App\Actions\Vehicule\GetVehicules;
@@ -58,6 +59,8 @@ Route::prefix('/')->middleware($middlewares)->group(function () {
             ->name('password.forgot');
         Route::post('/reset-password', ResetPassword::class)
             ->name('password.reset');
+        Route::get('/verify-email', VerifyEmail::class)
+            ->name('user.verify-email');
     });
 
     /**
