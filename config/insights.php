@@ -124,11 +124,6 @@ return [
                 'app/Traits/Actions/WithQueryBuilder.php',
             ],
         ],
-        UselessOverridingMethodSniff::class => [
-            'exclude' => [
-                'app/Http/Middleware/HandleInertiaRequests.php',
-            ],
-        ]
     ],
 
     /*
