@@ -1,0 +1,8 @@
+version: '3'
+
+tasks:
+  install:
+    desc: Install project
+    cmds:
+      - "cd ./backend/ && ./install"
+      - "cd ./backend/ && make dbcreate"
